@@ -1,0 +1,65 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+#define SIZE 5 
+int astack[SIZE], atop = -1; 
+ 
+void apush(int x) { 
+    if (atop < SIZE - 1) 
+        astack[++atop] = x; 
+} 
+ 
+void apop() { 
+    if (atop >= 0) 
+        atop--; 
+} 
+ 
+void ashow() { 
+    for (int i = atop; i >= 0; i--) 
+        printf("%d ", astack[i]); 
+    printf("\n"); 
+} 
+struct Node { 
+    int data; 
+    struct Node* next; 
+}; 
+ 
+struct Node* ltop = NULL; 
+ 
+void lpush(int x) { 
+    struct Node* n = malloc(sizeof(struct Node)); 
+    n->data = x; 
+    n->next = ltop; 
+    ltop = n; 
+} 
+ 
+void lpop() { 
+    if (ltop) { 
+        struct Node* t = ltop; 
+        ltop = ltop->next; 
+        free(t); 
+    } 
+} 
+ 
+void lshow() { 
+    struct Node* t = ltop; 
+    while (t) { 
+        printf("%d ", t->data); 
+        t = t->next; 
+    } 
+    printf("\n"); 
+} 
+int main() { 
+    apush(10); apush(20); apush(30); 
+    printf("Array Stack: "); 
+    ashow();            
+    apop(); 
+    printf("After pop: "); 
+    ashow();            
+lpush(100); lpush(200); lpush(300); 
+printf("Linked Stack: "); 
+lshow();            
+lpop(); 
+printf("After pop: "); 
+lshow();           
+return 0; 
+}
