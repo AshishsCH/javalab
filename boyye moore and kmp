@@ -1,0 +1,57 @@
+#include <stdio.h> 
+#include <string.h> 
+#define MAX 100 
+void computeLPS(char *pat, int m, int *lps) { 
+    int len = 0, i = 1; 
+    lps[0] = 0; 
+    while (i < m) { 
+        if (pat[i] == pat[len]) lps[i++] = ++len; 
+        else if (len) len = lps[len - 1]; 
+        else lps[i++] = 0;    }} 
+ 
+void KMP(char *txt, char *pat) { 
+    int n = strlen(txt), m = strlen(pat); 
+    int lps[m], i = 0, j = 0; 
+    computeLPS(pat, m, lps); 
+    printf("KMP match at: "); 
+    while (i < n) { 
+        if (pat[j] == txt[i]) { i++; j++; } 
+        if (j == m) { printf("%d ", i - j); j = lps[j - 1]; } 
+        else if (i < n && pat[j] != txt[i]) { 
+            j ? (j = lps[j - 1]) : i++; 
+        }    } 
+    printf("\n"); 
+} 
+void badCharHeur(char *pat, int size, int badchar[256]) { 
+    for (int i = 0; i < 256; i++) badchar[i] = -1; 
+    for (int i = 0; i < size; i++) badchar[(unsigned char)pat[i]] = i; 
+} 
+void BM(char *txt, char *pat) { 
+    int n = strlen(txt), m = strlen(pat); 
+    int badchar[256]; 
+    badCharHeur(pat, m, badchar); 
+ 
+    printf("BM match at: "); 
+    int s = 0; 
+    while (s <= (n - m)) { 
+        int j = m - 1; 
+        while (j >= 0 && pat[j] == txt[s + j]) j--; 
+        if (j < 0) { 
+            printf("%d ", s); 
+            s += (s + m < n) ? m - badchar[txt[s + m]] : 1; 
+        } else { 
+            s += (j - badchar[txt[s + j]] > 1) ? j - badchar[txt[s + j]] : 1; 
+        }   } 
+    printf("\n");} 
+ 
+int main() { 
+    char txt[MAX], pat[MAX]; 
+    printf("Enter text: "); 
+    scanf("%s", txt); 
+    printf("Enter pattern: "); 
+    scanf("%s", pat); 
+ 
+    KMP(txt, pat); 
+    BM(txt, pat); 
+    return 0; 
+}
