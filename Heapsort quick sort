@@ -1,0 +1,65 @@
+#include <stdio.h> 
+void swap(int *a, int *b) { 
+    int t = *a; *a = *b; *b = t; 
+} 
+int part(int a[], int l, int h) { 
+    int p = a[h], i = l - 1; 
+    for (int j = l; j < h; j++) 
+        if (a[j] < p) swap(&a[++i], &a[j]); 
+    swap(&a[i+1], &a[h]); 
+    return i + 1; 
+ } 
+void quick(int a[], int l, int h) { 
+    if (l < h) { 
+        int pi = part(a, l, h); 
+        quick(a, l, pi - 1); 
+        quick(a, pi + 1, h); 
+    } 
+} 
+void heapify(int a[], int n, int i) { 
+    int big = i, l = 2*i+1, r = 2*i+2; 
+    if (l < n && a[l] > a[big]) big = l; 
+    if (r < n && a[r] > a[big]) big = r; 
+    if (big != i) { 
+        swap(&a[i], &a[big]); 
+        heapify(a, n, big); 
+    } 
+} 
+ 
+void heap(int a[], int n) { 
+    for (int i = n/2-1; i >= 0; i--) heapify(a, n, i); 
+    for (int i = n-1; i > 0; i--) { 
+        swap(&a[0], &a[i]); 
+        heapify(a, i, 0); }} 
+void merge(int a[], int l, int m, int r) { 
+    int i=l, j=m+1, k=0, t[100]; 
+    while (i<=m && j<=r) t[k++] = (a[i]<a[j]) ? a[i++] : a[j++]; 
+    while (i<=m) t[k++] = a[i++]; 
+    while (j<=r) t[k++] = a[j++]; 
+    for (i=l, k=0; i<=r; i++) a[i] = t[k++]; 
+} 
+ 
+void mergeSort(int a[], int l, int r) { 
+    if (l < r) { 
+        int m = (l + r)/2; 
+        mergeSort(a, l, m); 
+        mergeSort(a, m+1, r); 
+        merge(a, l, m, r); 
+    } 
+} 
+void show(int a[], int n) { 
+    for (int i=0; i<n; i++) printf("%d ", a[i]); 
+    printf("\n"); 
+} 
+ 
+int main() { 
+    int a1[] = {9, 5, 1, 4, 3}, a2[] = {9, 5, 2, 4, 3}, a3[] = {9, 5, 1, 4, 3}; 
+    int n = 5; 
+quick(a1, 0, n-1); 
+printf("Quick: "); show(a1, n); 
+heap(a2, n); 
+printf("Heap:  "); show(a2, n); 
+mergeSort(a3, 0, n-1); 
+printf("Merge: "); show(a3, n); 
+return 0; 
+}
