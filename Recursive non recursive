@@ -1,0 +1,44 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+typedef struct N { 
+int d; 
+struct N *l, *r; 
+} N; 
+N* new(int v) { 
+N* n = malloc(sizeof(N)); 
+n->d = v; n->l = n->r = NULL; 
+return n; 
+} 
+void inR(N* n) { if(n) { inR(n->l); printf("%d ", n->d); inR(n->r); } } 
+void preR(N* n) { if(n) { printf("%d ", n->d); preR(n->l); preR(n->r); } } 
+void postR(N* n) { if(n) { postR(n->l); postR(n->r); printf("%d ", n->d); } } 
+N* S[100]; int top=-1; 
+void push(N* n){ S[++top]=n; } 
+N* pop(){ return S[top--]; } 
+void inNR(N* n){ 
+while(n || top!=-1){ 
+while(n) { push(n); n=n->l; } 
+n=pop(); printf("%d ", n->d); n=n->r; 
+}} 
+void preNR(N* n){ 
+if(!n) return; 
+push(n); 
+while(top!=-1){ 
+n=pop(); printf("%d ", n->d); 
+if(n->r) push(n->r); 
+if(n->l) push(n->l); 
+} 
+} 
+int main() { 
+N* r = new(1); 
+r->l = new(2); r->r = new(3); 
+r->l->l = new(4); r->l->r = new(5); 
+r->r->l = new(6); r->r->r = new(7); 
+printf("In R: "); inR(r); puts(""); 
+printf("Pre R: "); preR(r); puts(""); 
+printf("Post R: "); postR(r); puts(""); 
+top=-1; 
+printf("In NR: "); inNR(r); puts(""); 
+top=-1; 
+printf("Pre NR: "); preNR(r); puts(""); 
+}
