@@ -1,0 +1,77 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+#define SIZE 5 
+ 
+int aqueue[SIZE], front = 0, rear = -1; 
+ 
+void aenqueue(int x) { 
+    if (rear < SIZE - 1) 
+        aqueue[++rear] = x; 
+} 
+ 
+void adequeue() { 
+    if (front <= rear) 
+        front++; 
+} 
+ 
+void adisplay() { 
+    for (int i = front; i <= rear; i++) 
+        printf("%d ", aqueue[i]); 
+    printf("\n"); 
+} 
+struct Node { 
+    int data; 
+    struct Node* next; 
+}; 
+ 
+struct Node *frontPtr = NULL, *rearPtr = NULL; 
+ 
+void lenqueue(int x) { 
+    struct Node* n = malloc(sizeof(struct Node)); 
+    n->data = x; 
+    n->next = NULL; 
+ 
+    if (!rearPtr) 
+        frontPtr = rearPtr = n; 
+    else { 
+        rearPtr->next = n; 
+        rearPtr = n; 
+    } 
+} 
+ 
+void ldequeue() { 
+    if (frontPtr) { 
+        struct Node* t = frontPtr; 
+        frontPtr = frontPtr->next; 
+        if (!frontPtr) rearPtr = NULL; 
+        free(t); 
+    } 
+} 
+ 
+void ldisplay() { 
+    struct Node* t = frontPtr; 
+    while (t) { 
+        printf("%d ", t->data); 
+        t = t->next; 
+    } 
+    printf("\n"); 
+} 
+int main() { 
+// Array Queue Demo 
+aenqueue(10); aenqueue(20); aenqueue(30); 
+printf("Array Queue: "); 
+adisplay();           
+adequeue(); 
+// 10 20 30 
+printf("After dequeue: "); 
+adisplay();           
+// 20 30 
+lenqueue(100); lenqueue(200); lenqueue(300); 
+printf("Linked Queue: "); 
+ldisplay();           
+ldequeue(); 
+// 100 200 300 
+printf("After dequeue: "); 
+ldisplay();           
+return 0; 
+}
